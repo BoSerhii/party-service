@@ -14,10 +14,12 @@ import com.bobocode.model.PartyMember;
 import com.bobocode.service.PartyService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/party")
 @AllArgsConstructor
+@Slf4j
 public class PartyController {
 
     public PartyService partyService;
@@ -31,6 +33,7 @@ public class PartyController {
 
     @PostMapping
     public ResponseEntity<String> goToParty(@RequestBody PartyMember partyMember) {
+        log.debug(String.format("%s has attended party!", partyMember.toString()));
         return new ResponseEntity<>(partyService.goToParty(partyMember), HttpStatus.ACCEPTED);
     }
 }
