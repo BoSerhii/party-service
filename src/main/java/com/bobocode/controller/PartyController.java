@@ -1,6 +1,6 @@
 package com.bobocode.controller;
 
-
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bobocode.model.PartyList;
-import com.bobocode.model.PartyMember;
+import com.bobocode.dto.PartyListDto;
+import com.bobocode.dto.PartyMemberDto;
+import com.bobocode.entity.PartyMember;
 import com.bobocode.service.PartyService;
 
 import lombok.AllArgsConstructor;
@@ -23,20 +24,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PartyController {
 
-    public PartyService partyService;
+    private PartyService partyService;
+    private ModelMapper mapper;
 
     @GetMapping
-    public ResponseEntity<PartyList> getAll() {
-        var partyMembers = partyService.listAllMembers();
-        return new ResponseEntity<>(new PartyList(partyMembers.size(), partyMembers), HttpStatus.OK);
+    public ResponseEntity<PartyListDto> getAll() {
+        var partyMemberDtoList = partyService.listAllMembers().stream()
+            .map(member -> mapper.map(member, PartyMemberDto.class)).toList();
+        return new ResponseEntity<>(new PartyListDto(partyMemberDtoList.size(), partyMemberDtoList), HttpStatus.OK);
     }
 
 
     @PostMapping
     @SneakyThrows
-    public ResponseEntity<String> goToParty(@RequestBody PartyMember partyMember) {
-        Thread.sleep(5000);
+    public ResponseEntity<Void> goToParty(@RequestBody PartyMemberDto partyMember) {
+        partyService.goToParty(mapper.map(partyMember, PartyMember.class));
         log.debug(String.format("%s has attended party!", partyMember.toString()));
-        return new ResponseEntity<>(partyService.goToParty(partyMember), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

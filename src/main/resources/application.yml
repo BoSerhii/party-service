@@ -1,12 +1,18 @@
 spring:
   application:
     name: party-service
-
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST}:5432/postgres
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
 management:
   endpoint:
     health:
       probes:
         enabled: true
+
 logging:
   level:
-    com.bobocode: debug
+    com:
+      bobocode: debug
+

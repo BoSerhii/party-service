@@ -1,25 +1,25 @@
 package com.bobocode.service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
-import com.bobocode.model.PartyMember;
+import com.bobocode.entity.PartyMember;
+import com.bobocode.repository.PartyRepository;
+
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class PartyService {
 
-    private static final Set<PartyMember> partyMembers = ConcurrentHashMap.newKeySet();
+    private PartyRepository repository;
 
-
-    public String goToParty(PartyMember partyMember) {
-        partyMembers.add(partyMember);
-        return String.format("%s %s is partying!", partyMember.firstName(), partyMember.lastName());
+    public void goToParty(PartyMember partyMember) {
+        repository.save(partyMember);
     }
 
     public List<PartyMember> listAllMembers() {
-        return partyMembers.stream().toList();
+        return repository.findAll();
     }
 }
