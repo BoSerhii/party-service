@@ -14,6 +14,7 @@ import com.bobocode.model.PartyMember;
 import com.bobocode.service.PartyService;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -32,7 +33,9 @@ public class PartyController {
 
 
     @PostMapping
+    @SneakyThrows
     public ResponseEntity<String> goToParty(@RequestBody PartyMember partyMember) {
+        Thread.sleep(5000);
         log.debug(String.format("%s has attended party!", partyMember.toString()));
         return new ResponseEntity<>(partyService.goToParty(partyMember), HttpStatus.ACCEPTED);
     }
