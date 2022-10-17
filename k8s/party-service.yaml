@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: party-service
+  namespace: bobospace
+  labels:
+    app: party-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: party-service
+  template:
+    metadata:
+      labels:
+        app: party-service
+    spec:
+      containers:
+      - name: party-service
+        image: boserhii/party-service:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+
