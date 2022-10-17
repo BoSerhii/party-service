@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: party-service
+  namespace: bobospace
+  labels:
+    app: party-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: party-service
+  template:
+    metadata:
+      labels:
+        app: party-service
+    spec:
+      containers:
+      - name: party-service
+        image: boserhii/party-service:v2
+        imagePullPolicy: Always
+        env:
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-connection
+                  key: DATABASE_HOST        
+            - name: DATABASE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-connection
+                  key: DATABASE_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-connection
+                  key: DATABASE_PASSWORD
+        ports:
+        - containerPort: 8080
+
